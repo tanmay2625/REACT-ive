@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
-import {Navbar, NavbarBrand} from 'reactstrap'
 import Menu from './MenuComponents'
 import {DISHES} from '../hardcode/dishes'
+import {COMMENTS} from '../hardcode/comments'
+import {LEADERS} from '../hardcode/leaders'
+import {PROMOTIONS} from '../hardcode/promotions'
 import '../App.css';
-import DishDetails from './DishDetailsComponents';
+//import DishDetails from './DishDetailsComponents';
+import Home from './HomeComponents'
+import {Switch, Redirect, Route} from "react-router-dom"
+import Header from './HeaderComponent';
+import Footer from './FooterComponents';
+import Contact from './ContactComponents'
 
 class Main extends Component {
 
@@ -11,28 +18,34 @@ class Main extends Component {
     super(props);
     this.state={
       dishes : DISHES,
-      selectedDish : null,
+      comments : COMMENTS,
+      leaders : LEADERS,
+      promotions : PROMOTIONS,
     }
   }
 
-  selectDish(dishId){
-    this.setState({
-        selectedDish : dishId
-    });
-}
-
   render(){
+    const Homepage=()=>{
+      return(
+        <Home 
+              leader={this.state.leaders.filter((leader)=>leader.featured)[0]} 
+              promotion={this.state.promotions.filter((promotion)=>promotion.featured)[0]} 
+              dish={this.state.dishes.filter((dish)=>dish.featured)[0]}
+        />
+        )
+    }
     return (
       <div>
-        <Navbar dark color="primary">
-          <div className="container">
-            <NavbarBrand href="#">Ristorante Con Fusion</NavbarBrand>
-          </div>
-        </Navbar>
+        <Header/>
         <div className="container">
-            <Menu dishes={this.state.dishes} onClick={(dishId)=>this.selectDish(dishId)}/>
-            <DishDetails selectedDish={this.state.dishes.filter((dish)=>dish.id===this.state.selectedDish)[0]}/>
+          <Switch>
+              <Route path="/home" component={Homepage}/>
+              <Route exact path="/menu" component={()=><Menu dishes={this.state.dishes}/>}/>
+              <Route exact path="/contactus" component={Contact}/>
+              <Redirect to="/home"/>
+          </Switch>
         </div>
+        <Footer/>
       </div>
     );
   }
