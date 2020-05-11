@@ -5,12 +5,13 @@ import {COMMENTS} from '../hardcode/comments'
 import {LEADERS} from '../hardcode/leaders'
 import {PROMOTIONS} from '../hardcode/promotions'
 import '../App.css';
-//import DishDetails from './DishDetailsComponents';
+import DishDetails from './DishDetailsComponents';
 import Home from './HomeComponents'
 import {Switch, Redirect, Route} from "react-router-dom"
 import Header from './HeaderComponent';
 import Footer from './FooterComponents';
 import Contact from './ContactComponents'
+import About from './AboutComponents'
 
 class Main extends Component {
 
@@ -34,6 +35,15 @@ class Main extends Component {
         />
         )
     }
+
+    const DishWithId=({match})=>{
+      return(
+        <DishDetails dish={this.state.dishes.filter((dish)=>dish.id===parseInt(match.params.dishId))[0]}
+        comments={this.state.comments.filter((comment)=>comment.dishId===parseInt(match.params.dishId))}
+        />
+      )
+    }
+
     return (
       <div>
         <Header/>
@@ -41,6 +51,8 @@ class Main extends Component {
           <Switch>
               <Route path="/home" component={Homepage}/>
               <Route exact path="/menu" component={()=><Menu dishes={this.state.dishes}/>}/>
+              <Route exact path="/aboutus" component={()=>< About leaders={this.state.leaders}/>}/>
+              <Route path="/menu/:dishId" component={DishWithId}/>
               <Route exact path="/contactus" component={Contact}/>
               <Redirect to="/home"/>
           </Switch>

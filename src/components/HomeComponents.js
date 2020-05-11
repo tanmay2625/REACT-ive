@@ -8,6 +8,7 @@ function RenderCard({item}){
             <CardBody style={{backgroundColor:"black"}}>
                 <CardTitle style={{color:"red"}}><h3><strong>{item.name}</strong></h3></CardTitle>
                 {item.designation ? <CardSubtitle style={{color:"blue"}}><h4><strong>{item.designation}</strong></h4></CardSubtitle> : null }
+                <hr style={{backgroundColor:"white", height:"1px"}}/>
                 <CardText className="text-white"><h5>{item.description}</h5></CardText>
             </CardBody>
         </Card>
