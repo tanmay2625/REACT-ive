@@ -45,6 +45,7 @@ class DishDetails extends Component{
 
     handleSubmit(values){
         this.toggleModal();
+        this.props.addComment(this.props.dish.id, values.name, values.rating, values.comment);
         alert("Current state is :" + JSON.stringify(values));
     }
 
