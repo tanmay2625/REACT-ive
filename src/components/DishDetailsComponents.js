@@ -1,6 +1,7 @@
 import React, {Component} from "react"
-import {Card, CardImg, CardText, CardTitle, CardSubtitle, CardBody, Breadcrumb, BreadcrumbItem} from "reactstrap"
+import {Card, CardImg, CardText, CardTitle, Label, CardSubtitle, CardBody, Breadcrumb, BreadcrumbItem, Button, Row, Col, Modal, ModalHeader, ModalBody} from "reactstrap"
 import {Link} from "react-router-dom"
+import {LocalForm, Control, Errors} from "react-redux-form"
 
 function printDate(date){
     const year=parseInt(date.slice(0,4),10);
@@ -24,13 +25,27 @@ function RenderCard({item}){
     )
 }
 
+const required = (val) => val && val.length;
+
 class DishDetails extends Component{
 
     constructor(props){
         super(props);
         this.state={
-
+            isModalOpen : false,
         }
+        this.toggleModal=this.toggleModal.bind(this);
+    }
+
+    toggleModal(){
+        this.setState({
+            isModalOpen : !this.state.isModalOpen,
+        })
+    }
+
+    handleSubmit(values){
+        this.toggleModal();
+        alert("Current state is :" + JSON.stringify(values));
     }
 
     render(){
@@ -38,13 +53,14 @@ class DishDetails extends Component{
         if(dish==null)return(<div></div>)
         const comments=this.props.comments.map((comment)=>{
             return(
-                    <ul className="list-unstyled">
-                        <h5>{comment.comment}</h5>
-                        <p className="text-right">-- <i>{comment.author}, {printDate(comment.date)}</i></p>
-                    </ul>
+                <ul className="list-unstyled">
+                    <h5>{comment.comment}</h5>
+                    <p className="text-right">-- <i>{comment.author}, {printDate(comment.date)}</i></p>
+                </ul>
             )
         })
         return(
+            <React.Fragment>
             <div className="row">
                 <Breadcrumb>
                     <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
@@ -64,8 +80,50 @@ class DishDetails extends Component{
                             {comments}
                         </div>
                     </div>
+                    <Button color="danger" className="mt-5" onClick={this.toggleModal}>Submit Comment</Button>
                 </div>
             </div>
+            <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+                <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
+                <ModalBody>
+                    <LocalForm onSubmit={(values)=>this.handleSubmit(values)}>
+                        <Row className="form-group">
+                            <Label htmlFor="rating" md={2}>Rating</Label>
+                            <Col md={10}>
+                                <Control.select model=".rating" name="rating" id="rating" className="form-control" validators={{required}}>
+                                    <option selected disabled>--Select--</option>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </Control.select>
+                                <Errors className="text-danger" model=".rating" show="touched" messages={{required:"This is a required field!"}}/>
+                            </Col>
+                        </Row>
+                        <Row className="form-group">
+                            <Label htmlFor="name" md={2}>Name</Label>
+                            <Col md={10}>
+                                <Control.text model=".name" name="name" id="name" className="form-control" validators={{required}}/>
+                                <Errors className="text-danger" model=".name" show="touched" messages={{required:"This is a required field!"}}/>
+                            </Col>
+                        </Row>
+                        <Row className="form-group">
+                            <Label htmlFor="comment" md={2}>Comment</Label>
+                            <Col md={10}>
+                                <Control.textarea model=".comment" rows="6" name="comment" id="comment" className="form-control" validators={{required}}/>
+                                <Errors className="text-danger" model=".comment" show="touched" messages={{required:"This is a required field!"}}/>
+                            </Col>
+                        </Row>
+                        <Row className="form-group">
+                            <Col md={{offset:"2", size:"10"}} >
+                                <Button type="submit" value="submit" color="primary">Send Comment</Button>
+                            </Col>
+                        </Row>
+                    </LocalForm>
+                </ModalBody>
+            </Modal>
+            </React.Fragment>
         )
 
     }
