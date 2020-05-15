@@ -5,10 +5,6 @@ import {LocalForm, Control} from "react-redux-form"
 
 class Contact extends Component {
 
-    constructor(props){
-        super(props);
-    };
-
     handleSubmit(values){
         alert("Current state is :" + JSON.stringify(values));
     }

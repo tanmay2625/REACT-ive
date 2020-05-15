@@ -2,6 +2,7 @@ import React, {Component} from "react"
 import {Card, CardImg, CardText, CardTitle, Label, CardSubtitle, CardBody, Breadcrumb, BreadcrumbItem, Button, Row, Col, Modal, ModalHeader, ModalBody} from "reactstrap"
 import {Link} from "react-router-dom"
 import {LocalForm, Control, Errors} from "react-redux-form"
+import { Loading } from "./LoadingComponents";
 
 function printDate(date){
     const year=parseInt(date.slice(0,4),10);
@@ -50,6 +51,17 @@ class DishDetails extends Component{
     }
 
     render(){
+        if(this.props.isLoading){
+            return (
+                
+                <Loading/>
+            )
+        }
+        if(this.props.error){
+            return(
+                <h4 className="text-danger">{this.props.error}</h4>
+            )
+        }
         const dish=this.props.dish;
         if(dish==null)return(<div></div>)
         const comments=this.props.comments.map((comment)=>{
