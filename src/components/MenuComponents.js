@@ -2,6 +2,7 @@ import React, {Component} from "react"
 import {Card, CardTitle, CardImg, CardImgOverlay, BreadcrumbItem, Breadcrumb} from "reactstrap"
 import {Link} from "react-router-dom"
 import { Loading } from "./LoadingComponents"
+import { baseUrl } from "../hardcode/baseUrl"
 
 class Menu extends Component{
     
@@ -22,7 +23,7 @@ class Menu extends Component{
             return(
                 <div className="col-12 col-md-5 ml-1 mt-5 ">
                     <Card key={dish.id}>
-                        <CardImg object src={dish.image}></CardImg>
+                        <CardImg object src={baseUrl+ dish.image}></CardImg>
                         <CardImgOverlay>
                             <CardTitle><Link to={`/menu/${dish.id}`}><h3 style={{color:"red"}} ><strong>{dish.name}</strong></h3></Link></CardTitle>
                         </CardImgOverlay>

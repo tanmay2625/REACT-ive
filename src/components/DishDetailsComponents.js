@@ -3,6 +3,7 @@ import {Card, CardImg, CardText, CardTitle, Label, CardSubtitle, CardBody, Bread
 import {Link} from "react-router-dom"
 import {LocalForm, Control, Errors} from "react-redux-form"
 import { Loading } from "./LoadingComponents";
+import { baseUrl } from "../hardcode/baseUrl";
 
 function printDate(date){
     const year=parseInt(date.slice(0,4),10);
@@ -15,7 +16,7 @@ function printDate(date){
 function RenderCard({item}){
     return(
         <Card>
-            <CardImg object src={item.image}></CardImg>
+            <CardImg object src={baseUrl+ item.image}></CardImg>
             <CardBody style={{backgroundColor:"black"}}>
                 <CardTitle style={{color:"red"}}><h3><strong>{item.name}</strong></h3></CardTitle>
                 {item.designation ? <CardSubtitle style={{color:"blue"}}><h4><strong>{item.designation}</strong></h4></CardSubtitle> : null }
