@@ -4,6 +4,7 @@ import {Link} from "react-router-dom"
 import {LocalForm, Control, Errors} from "react-redux-form"
 import { Loading } from "./LoadingComponents";
 import { baseUrl } from "../hardcode/baseUrl";
+import {Fade, FadeTransform, Stagger} from "react-animation-components"
 
 function printDate(date){
     const year=parseInt(date.slice(0,4),10);
@@ -15,15 +16,21 @@ function printDate(date){
 
 function RenderCard({item}){
     return(
-        <Card>
-            <CardImg object src={baseUrl+ item.image}></CardImg>
-            <CardBody style={{backgroundColor:"black"}}>
-                <CardTitle style={{color:"red"}}><h3><strong>{item.name}</strong></h3></CardTitle>
-                {item.designation ? <CardSubtitle style={{color:"blue"}}><h4><strong>{item.designation}</strong></h4></CardSubtitle> : null }
-                <hr style={{backgroundColor:"white", height:"1px"}}/>
-                <CardText className="text-white"><h5>{item.description}</h5></CardText>
-            </CardBody>
-        </Card>
+        <FadeTransform
+        in
+        transformProps={{
+            exitTransform: 'scale(0.5) translateY(-50%)'
+        }}>>
+            <Card>
+                <CardImg object src={baseUrl+ item.image}></CardImg>
+                <CardBody style={{backgroundColor:"black"}}>
+                    <CardTitle style={{color:"red"}}><h3><strong>{item.name}</strong></h3></CardTitle>
+                    {item.designation ? <CardSubtitle style={{color:"blue"}}><h4><strong>{item.designation}</strong></h4></CardSubtitle> : null }
+                    <hr style={{backgroundColor:"white", height:"1px"}}/>
+                    <CardText className="text-white"><h5>{item.description}</h5></CardText>
+                </CardBody>
+            </Card>
+        </FadeTransform>
     )
 }
 
@@ -47,7 +54,7 @@ class DishDetails extends Component{
 
     handleSubmit(values){
         this.toggleModal();
-        this.props.addComment(this.props.dish.id, values.name, values.rating, values.comment);
+        this.props.postComment(this.props.dish.id, values.name, values.rating, values.comment);
         alert("Current state is :" + JSON.stringify(values));
     }
 
@@ -67,10 +74,12 @@ class DishDetails extends Component{
         if(dish==null)return(<div></div>)
         const comments=this.props.comments.map((comment)=>{
             return(
-                <ul className="list-unstyled">
-                    <h5>{comment.comment}</h5>
-                    <p className="text-right">-- <i>{comment.author}, {printDate(comment.date)}</i></p>
-                </ul>
+                <Fade in>
+                    <ul className="list-unstyled">
+                        <h5>{comment.comment}</h5>
+                        <p className="text-right">-- <i>{comment.author}, {printDate(comment.date)}</i></p>
+                    </ul>
+                </Fade>
             )
         })
         return(
@@ -91,7 +100,7 @@ class DishDetails extends Component{
                     <div className="card">
                         <h3 className="card-header bg-warning" style={{color:"blue"}}><strong>Comments</strong></h3>
                         <div className="card-body" style={{backgroundColor:"skyblue"}}>
-                            {comments}
+                            <Stagger in>{comments}</Stagger>
                         </div>
                     </div>
                     <Button color="danger" className="mt-5" onClick={this.toggleModal}>Submit Comment</Button>
