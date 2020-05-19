@@ -134,3 +134,59 @@ export const fetchPromos = () => (dispatch) =>{
     then(promos=>dispatch(PromosAdd(promos))).
     catch(error=>dispatch(PromosFailed(error.message)));
 }
+
+export const LeadersLoading = ()=>({
+    type:ActionTypes.LEADERS_LOADING,
+})
+
+export const LeadersFailed = (error) =>({
+    type:ActionTypes.LEADERS_FAILED,
+    payload:error,
+}) 
+
+export const LeadersAdd = (leaders)=>({
+    type:ActionTypes.LEADERS_ADD,
+    payload:leaders,
+})
+
+export const fetchLeaders = () => (dispatch) =>{
+    dispatch(LeadersLoading());
+    return fetch(baseUrl+'leaders').
+    then(response=>{
+        if(response.ok)return response;
+        else{
+            var error=new Error('Error ' + response.status + ': ' + response.statusText)
+            error.response = response
+            throw error;
+        }
+    },error=>{
+        var message=new Error(error.message);
+        throw message;
+    }).
+    then(response=>response.json()).
+    then(leaders=>dispatch(LeadersAdd(leaders))).
+    catch(error=>dispatch(LeadersFailed(error)))
+}
+
+export const postFeedback = (feedback) => ()=> {
+    return fetch(baseUrl+'feedback',{
+        method:'POST',
+        body:JSON.stringify(feedback),
+        headers:{
+            "Content-Type" : "application/json"
+        },
+        credentials:"same-origin"
+    }).
+    then(response=>{
+        if(response.ok)return response;
+        else{
+            var error=new Error('Error ' + response.status + ': ' + response.statusText)
+            error.response = response
+            throw error;
+        }
+    },error=>{
+        var message=new Error(error.message);
+        throw message;
+    }).
+    catch(error=>alert("Sorry, your feedback could not be posted!\nError: "+error.message))
+}

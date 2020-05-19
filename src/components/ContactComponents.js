@@ -6,7 +6,18 @@ import {Form, Control} from "react-redux-form"
 class Contact extends Component {
 
     handleSubmit(values){
-        alert("Current state is :" + JSON.stringify(values));
+        alert(" Thank you for your feedback!");
+        var feedback={
+            firstname:values.firstname,
+            lastname:values.lastname,
+            telnum:values.telnum,
+            email:values.email,
+            agree:values.agree,
+            contactType:values.contactType,
+            message:values.message,
+            date:new Date().toISOString(),
+        }
+        this.props.postFeedback(feedback);
         this.props.resetFeedbackForm();
     }
 
@@ -98,7 +109,7 @@ class Contact extends Component {
                             <Row className="form-group">
                                 <Label htmlFor="message" md={2}>Feedback</Label>
                                 <Col md={10}>
-                                    <Control.textarea model=".mesage" rows="12" name="message" id="message" className="form-control" />
+                                    <Control.textarea model=".message" rows="12" name="message" id="message" className="form-control" />
                                 </Col>
                             </Row>
                             <Col md={{offset:"2", size:"10"}}>

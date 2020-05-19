@@ -1,32 +1,41 @@
 import React from 'react';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { baseUrl } from '../hardcode/baseUrl';
+import {Stagger, Fade, FadeTransform} from 'react-animation-components'
+import {Loading} from './LoadingComponents'
 
 function RenderLeader({leader}){
     return(
-      <Media className="mt-5">
-        <Media left middle>
-            <Media object src={leader.image}/>
-        </Media>
-        <Media body className="ml-5">
-            <Media heading>{leader.name},&nbsp;{leader.abbr}</Media>
-            <h4>{leader.designation}</h4>
-            <p className="d-none d-md-block">{leader.description}</p>
+        <Fade in>
+        <Media className="mt-5">
+            <Media left middle>
+                <Media object src={baseUrl+ leader.image}/>
             </Media>
-      </Media>
+            <Media body className="ml-5">
+                <Media heading>{leader.name},&nbsp;{leader.abbr}</Media>
+                <h4>{leader.designation}</h4>
+                <p className="d-none d-md-block">{leader.description}</p>
+                </Media>
+        </Media></Fade>
+      
     )
   }
 
 function About(props) {
 
-    const leaders=props.leaders.map((leader)=>{
+    const leaders=props.leaders.leaders.map((leader)=>{
         return (
-            <React.Fragment>
-                <RenderLeader leader={leader}/>
-            </React.Fragment>
+            <Fade in><Media list><RenderLeader leader={leader}/></Media></Fade>
         )
     })
 
+    if(props.leaders.isLoading){
+        return <Loading/>
+    }
+    else if(props.leaders.error){
+        return <h4 className="text-danger">{props.leaders.error}</h4>
+    }
     return(
         <div className="container">
             <div className="row">
@@ -46,21 +55,24 @@ function About(props) {
                     <p>The restaurant traces its humble beginnings to <em>The Frying Pan</em>, a successful chain started by our CEO, Mr. Peter Pan, that featured for the first time the world's best cuisines in a pan.</p>
                 </div>
                 <div className="col-12 col-md-5">
-                    <Card>
-                        <CardHeader className="bg-primary text-white">Facts At a Glance</CardHeader>
-                        <CardBody>
-                            <dl className="row p-1">
-                                <dt className="col-6">Started</dt>
-                                <dd className="col-6">3 Feb. 2013</dd>
-                                <dt className="col-6">Major Stake Holder</dt>
-                                <dd className="col-6">HK Fine Foods Inc.</dd>
-                                <dt className="col-6">Last Year's Turnover</dt>
-                                <dd className="col-6">$1,250,375</dd>
-                                <dt className="col-6">Employees</dt>
-                                <dd className="col-6">40</dd>
-                            </dl>
-                        </CardBody>
-                    </Card>
+                    <FadeTransform in
+                    transformProps={{exitTransform:'scale(0.5) translateY(-50%)'}}>
+                        <Card>
+                            <CardHeader className="bg-primary text-white">Facts At a Glance</CardHeader>
+                            <CardBody>
+                                <dl className="row p-1">
+                                    <dt className="col-6">Started</dt>
+                                    <dd className="col-6">3 Feb. 2013</dd>
+                                    <dt className="col-6">Major Stake Holder</dt>
+                                    <dd className="col-6">HK Fine Foods Inc.</dd>
+                                    <dt className="col-6">Last Year's Turnover</dt>
+                                    <dd className="col-6">$1,250,375</dd>
+                                    <dt className="col-6">Employees</dt>
+                                    <dd className="col-6">40</dd>
+                                </dl>
+                            </CardBody>
+                        </Card>
+                    </FadeTransform>
                 </div>
                 <div className="col-12">
                     <Card>
@@ -82,9 +94,9 @@ function About(props) {
                     <h2>Corporate Leadership</h2>
                 </div>
                 <div className="col-12">
-                    <Media list>
-                        {leaders}
-                    </Media>
+                <Stagger in>
+                    {leaders}
+                    </Stagger>
                 </div>
             </div>
         </div>
